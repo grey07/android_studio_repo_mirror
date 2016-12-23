@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="grey">
+        <link rel="icon" href="assets/favicon.ico">
+
+        <title>Android Studio Repository Management</title>
+
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+        <link href="css/cover.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="site-wrapper">
+          <div class="site-wrapper-inner">
+            <div class="cover-container">
+              <div class="masthead clearfix">
+                <div class="inner">
+                  <h3 class="masthead-brand">Android Studio Repository Management</h3>
+                  <nav>
+                    <ul class="nav masthead-nav">
+                      <li><a href="index.html">Installed Packages</a></li>
+                      <li class="active"><a href="update.html">Update Repository</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+
+              <div class="inner cover">
+                      <p class="fileUpload btn btn-default">
+                        <span class="glyphicon glyphicon-upload"></span> Upload repository
+                        <input type="file" id="uploadFile" />
+                      </p>
+
+                      <p id="fileUploadError" class="text-danger hide"></p>
+
+                    <div class="list-group" id="files"></div>
+
+                    <script id="fileUploadProgressTemplate" type="text/x-jquery-tmpl">
+                        <div class="list-group-item">
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-info" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </script>
+
+                    <script id="fileUploadItemTemplate" type="text/x-jquery-tmpl">
+                        <div class="list-group-item">
+                            <button type="button" class="close">&times;</button>
+                            <span class="glyphicon glyphicon-file"></span> File name (type, date, etc)
+                        </div>
+                    </script>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.tmpl.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/ie10-viewport-bug-workaround.js"></script>
+        <script src="js/update.js"></script>
+
+    </body>
+</html>
