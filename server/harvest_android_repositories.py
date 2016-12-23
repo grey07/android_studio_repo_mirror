@@ -4,6 +4,7 @@ from past.builtins import xrange
 from urlparse import urlparse
 from Queue import Queue, Empty
 from os import makedirs, getcwd
+from optparse import OptionParser
 from multiprocessing import cpu_count
 from urllib2 import urlopen, HTTPError
 from threading import Thread, current_thread
@@ -57,10 +58,17 @@ def download_daemon(queue):
         except Empty:
             # Nothing left to process exit thread
             return
+        except:
+            # Some other exception occured, but we still need to mark the queue request as done.
+            queue.task_done()
         else:
             queue.task_done()
 
 if __name__ == "__main__":
+    option_parser = OptionParser()
+    option_parser.add_option("-r", "--repo_zip", dest="repo_zip", help="write repo to FILE", metavar="FILE")
+    options, args = option_parser.parse_args()
+
     download_queue = Queue()
 
     for sub_repo_uri in __sub_repos__:
