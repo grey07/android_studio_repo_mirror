@@ -6,7 +6,7 @@ $("#uploadFile").change(function() {
     $("#fileUploadError").addClass("hide");
 
     $.ajax({
-        url: '/update',
+        url: '/push_update',
         type: 'POST',
         xhr: function() {
             var xhr = $.ajaxSettings.xhr();
