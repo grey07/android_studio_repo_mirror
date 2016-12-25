@@ -6,15 +6,22 @@ from zipfile import ZipFile
 from tempfile import mkstemp
 from os import close, remove
 from shutil import copyfileobj
-from os.path import realpath, dirname, join
 from cherrypy.lib.static import serve_file
+from os.path import realpath, dirname, join, exists
 
 __script_directory__ = dirname(realpath(__file__))
 
 __config__ = {
+    'global' : {
+        'server.max_request_body_size'  : 0,
+    },
     '/assets' : {
         'tools.staticdir.on'        : True,
         'tools.staticdir.dir'       : join(__script_directory__, 'site', 'assets')
+    },
+    '/icon.ico' : {
+        'tools.staticfile.on'       : True,
+        'tools.staticfile.filename' : join(__script_directory__, 'site', 'assets', 'favicon.ico')
     }
 }
 
@@ -30,22 +37,35 @@ class AndroidStudioRepositoryMirror(object):
 
     @cherrypy.expose
     @cherrypy.tools.allow(methods=['GET'])
-    def update(self):
-        return serve_file(join(__script_directory__, 'site', 'update.html'))
+    def get_source_table(self):
+        return """
+                <tr>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+                <tr>
+                  <td>Thornton</td>
+                  <td>@fat</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>@twitter</td>
+                </tr>
+        """
 
     @cherrypy.expose
     @cherrypy.tools.allow(methods=['POST'])
-    def push_update(self, repository_file):
+    def push_update(self, file):
         temp_file_descriptor, temp_file_path = mkstemp()
+        close(temp_file_descriptor)
         try:
             with open(temp_file_path, 'wb+') as temp_file:
-                copyfileobj(repository_file.file.read())
+                copyfileobj(file.file, temp_file)
 
             with ZipFile(temp_file_path, 'r') as new_repo_zip:
                 new_repo_zip.extractall(__script_directory__)
 
         finally:
-            close(temp_file_descriptor)
             remove(temp_file_path)
 
 if __name__ == "__main__":
@@ -69,7 +89,8 @@ if __name__ == "__main__":
     https_server.socket_timeout = 60
     https_server.ssl_private_key = join(__script_directory__, 'androidstudiorepomirror.key')
     https_server.ssl_certificate = join(__script_directory__, 'androidstudiorepomirror.crt')
-    #https_server.subscribe()
+    if exists(https_server.ssl_private_key) and exists(https_server.ssl_certificate):
+        https_server.subscribe()
 
     cherrypy.engine.start()
     cherrypy.engine.block()

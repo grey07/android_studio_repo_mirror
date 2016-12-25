@@ -1,9 +1,23 @@
-$("#uploadFile").change(function() {
+$("#update_repo_progress").hide();
+
+var refresh_table = function() {
+    $.ajax({
+        url: '/get_source_table',
+        type: 'GET',
+        success: function(data) {
+            $("#source_table").append(data);
+        }
+    });
+};
+
+$("#source_table").ready(function(){
+    refresh_table();
+});
+
+$("#update_repo").change(function() {
     var formData = new FormData();
     formData.append('file', this.files[0]);
-
-    $("#files").append($("#fileUploadProgressTemplate").tmpl());
-    $("#fileUploadError").addClass("hide");
+    $("#update_repo_progress").show();
 
     $.ajax({
         url: '/push_update',
@@ -13,20 +27,18 @@ $("#uploadFile").change(function() {
             if (xhr.upload) {
                 xhr.upload.addEventListener('progress', function(evt) {
                     var percent = (evt.loaded / evt.total) * 100;
-                    $("#files").find(".progress-bar").width(percent + "%");
+                    $("#update_repo_progress").find(".bar").width(percent + "%");
                 }, false);
             }
             return xhr;
         },
         success: function(data) {
-            $("#files").children().last().remove();
-            $("#files").append($("#fileUploadItemTemplate").tmpl(data));
-            $("#uploadFile").closest("form").trigger("reset");
+            $("#update_repo_progress").hide();
+            $("#update_repo").closest("form").trigger("reset");
         },
         error: function() {
-            $("#fileUploadError").removeClass("hide").text("An error occured!");
-            $("#files").children().last().remove();
-            $("#uploadFile").closest("form").trigger("reset");
+            $("#update_repo_progress").hide();
+            $("#update_repo").closest("form").trigger("reset");
         },
         data: formData,
         cache: false,
