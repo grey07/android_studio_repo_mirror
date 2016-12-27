@@ -1,6 +1,7 @@
 $("#update_repo_progress").hide();
 
 var refresh_table = function() {
+    $("#source_table").empty();
     $.ajax({
         url: '/get_source_table',
         type: 'GET',
@@ -10,7 +11,11 @@ var refresh_table = function() {
     });
 };
 
-$("#source_table").ready(function(){
+$("#source_table").ready(function() {
+    refresh_table();
+});
+
+$("#refresh_table").click(function() {
     refresh_table();
 });
 
